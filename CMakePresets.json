@@ -1,0 +1,57 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": { "major": 3, "minor": 21, "patch": 0 },
+  "configurePresets": [
+    {
+      "name": "msvc-base",
+      "hidden": true,
+      "description": "Pins MSVC toolset 14.36. This machine has two VS 2022 installs -- Community (14.36, 14.39) and BuildTools (14.44) -- and only Community has 14.36, so naming the version makes CMake Tools pick a deterministic vcvars environment instead of whichever install it enumerates first. Without the pin you get 14.44 headers against the cached 14.36 cl.exe and hundreds of STL1001 errors that never mention your own files. Moving to 14.44 means deleting %LOCALAPPDATA%/pidrl-build first, because the compiler path is cached and never re-derived.",
+      "generator": "Ninja",
+      "binaryDir": "$env{LOCALAPPDATA}/pidrl-build/${presetName}",
+      "architecture": { "value": "x64", "strategy": "external" },
+      "toolset": { "value": "host=x64,version=14.36", "strategy": "external" },
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "cl.exe",
+        "CMAKE_PREFIX_PATH": "C:/Users/sidha/.cpp/libtorch"
+      }
+    },
+    {
+      "name": "msvc-debug",
+      "displayName": "MSVC Debug",
+      "description": "Assertions and full debug info. Use while writing the dynamics.",
+      "inherits": "msvc-base",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug" }
+    },
+    {
+      "name": "msvc-relwithdebinfo",
+      "displayName": "MSVC RelWithDebInfo",
+      "description": "Optimized with symbols. Profiling, and the config to pair with a Release LibTorch once RL starts.",
+      "inherits": "msvc-base",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "RelWithDebInfo" }
+    },
+    {
+      "name": "msvc-release",
+      "displayName": "MSVC Release",
+      "description": "Maximum speed. Long training runs and throughput benchmarks.",
+      "inherits": "msvc-base",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" }
+    }
+  ],
+  "buildPresets": [
+    { "name": "msvc-debug", "configurePreset": "msvc-debug" },
+    { "name": "msvc-relwithdebinfo", "configurePreset": "msvc-relwithdebinfo" },
+    { "name": "msvc-release", "configurePreset": "msvc-release" }
+  ],
+  "testPresets": [
+    {
+      "name": "msvc-debug",
+      "configurePreset": "msvc-debug",
+      "output": { "outputOnFailure": true }
+    },
+    {
+      "name": "msvc-release",
+      "configurePreset": "msvc-release",
+      "output": { "outputOnFailure": true }
+    }
+  ]
+}
