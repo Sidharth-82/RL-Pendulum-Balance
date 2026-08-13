@@ -14,7 +14,7 @@ find_package(Torch REQUIRED)
 
 add_executable(train src/main.cpp src/ppo.cpp src/rollout.cpp src/networks.cpp)
 target_include_directories(train PRIVATE include)
-target_link_libraries(train PRIVATE sim "${TORCH_LIBRARIES}")
+target_link_libraries(train PRIVATE config sim "${TORCH_LIBRARIES}")
 
 # LibTorch needs the same C++ standard the rest of the project uses, and it will not
 # tell you politely if it does not get it.

@@ -19,7 +19,7 @@ core::Vec filled(const core::Vec& given, int n, double fallback) {
 
 Env::Env(const EnvConfig& config, std::uint64_t seed)
     : config_(config),
-      plant_(config.plant),
+      plant_(config.plant, config.gravity),
       actuator_(config.limits, config.encoder.latency_steps),
       sensors_(config.encoder, config.plant.n_links(), config.dt),
       rng_(static_cast<std::mt19937::result_type>(seed)) {

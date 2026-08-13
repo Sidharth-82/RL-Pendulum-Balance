@@ -14,6 +14,9 @@ namespace core {
 // Chosen over potentiometers because they add no joint friction (which compounds
 // with N), never wear, are absolute so no homing is needed, and do not require an
 // ADC -- the Pi has none.
+//
+// Part numbers and filter corner come from config.json under "encoder". The
+// initialisers below are test fixtures.
 struct EncoderSpec {
     int bits = 12;             // quantisation, counts = 2^bits per revolution
     double noise_std = 0.0;    // rad, per reading

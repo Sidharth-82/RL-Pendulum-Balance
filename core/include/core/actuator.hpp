@@ -8,6 +8,17 @@ namespace core {
 // Envelope of a belt-driven stepper. Everything here is a hardware limit the
 // controller must stay inside, not a modelling nicety -- a policy trained without
 // these will happily command accelerations the motor cannot produce.
+//
+// THE VALUES BELOW ARE NOT THE HARDWARE. The real numbers live in config.json under
+// "actuator", and config::load() requires every one of them, so nothing on the
+// runtime path can inherit a default from here. These initialisers exist only so
+// unit tests can write `StepperLimits limits;` and get a small, self-consistent
+// synthetic motor to poke at.
+//
+// The distinction is not pedantic. Setting max_accel here while leaving
+// holding_force at its default describes a motor that cannot produce the
+// acceleration being asked of it, and the only symptom is every episode ending on
+// its first plant step. config::load() now rejects that combination outright.
 struct StepperLimits {
     double max_velocity = 0.5;      // m/s, from max usable step rate / steps_per_metre
     double max_accel = 5.0;         // m/s^2, step-rate slew limit before steps are lost

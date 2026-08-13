@@ -23,6 +23,10 @@ struct EnvConfig {
     core::StepperLimits limits;
     core::EncoderSpec encoder;
 
+    // Reached Plant only as core::kGravity before, so it was the one plant
+    // constant that could not be changed from a config file.
+    double gravity = core::kGravity;
+
     double dt = 1.0 / 500.0;       // plant integration period
     double episode_seconds = 8.0;
 

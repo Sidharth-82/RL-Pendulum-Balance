@@ -98,10 +98,33 @@ add_library(eigen_headers INTERFACE)
 target_include_directories(eigen_headers SYSTEM INTERFACE ${eigen_SOURCE_DIR})
 add_library(Eigen3::Eigen ALIAS eigen_headers)
 
+# nlohmann/json, single header. Fetched as one file rather than through
+# FetchContent because the upstream repository is ~100 MB of tests and CI we
+# would clone and then ignore; the amalgamated header is 900 KB and is the whole
+# library. Same treatment as Eigen after that: INTERFACE target, SYSTEM include.
+set(PIDRL_JSON_DIR "${CMAKE_BINARY_DIR}/_deps/nlohmann-single")
+if(NOT EXISTS "${PIDRL_JSON_DIR}/nlohmann/json.hpp")
+  message(STATUS "Downloading nlohmann/json single header")
+  file(DOWNLOAD
+    "https://raw.githubusercontent.com/nlohmann/json/v3.11.3/single_include/nlohmann/json.hpp"
+    "${PIDRL_JSON_DIR}/nlohmann/json.hpp"
+    EXPECTED_HASH SHA256=9bea4c8066ef4a1c206b2be5a36302f8926f7fdc6087af5d20b417d0cf103ea6
+    TLS_VERIFY ON
+    STATUS PIDRL_JSON_STATUS)
+  list(GET PIDRL_JSON_STATUS 0 PIDRL_JSON_CODE)
+  if(NOT PIDRL_JSON_CODE EQUAL 0)
+    list(GET PIDRL_JSON_STATUS 1 PIDRL_JSON_MESSAGE)
+    message(FATAL_ERROR "Failed to download nlohmann/json: ${PIDRL_JSON_MESSAGE}")
+  endif()
+endif()
+add_library(nlohmann_json INTERFACE)
+target_include_directories(nlohmann_json SYSTEM INTERFACE "${PIDRL_JSON_DIR}")
+
 # --- targets -----------------------------------------------------------------
 add_subdirectory(core)      # shared with the Pi -- Eigen only, no other deps
 add_subdirectory(baseline)  # LQR: linearize + Riccati
 add_subdirectory(sim)       # desktop only: env, rollouts, domain randomization
+add_subdirectory(config)    # config.json -> populated structs; desktop only
 
 if(PIDRL_BUILD_RL)
   add_subdirectory(rl)

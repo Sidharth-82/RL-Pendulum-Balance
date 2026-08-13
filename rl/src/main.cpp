@@ -21,68 +21,37 @@
 #include <tuple>
 #include <vector>
 
+#include "config/config.hpp"
 #include "rl/networks.hpp"
 #include "rl/ppo.hpp"
 #include "rl/rollout.hpp"
 #include "sim/env.hpp"
 
-namespace {
+int main(int argc, char** argv) {
+    // Every hardware and run number lives in config.json. Nothing is hard-coded here,
+    // and nothing falls back to a struct default -- config::load() requires each key
+    // and throws naming the one that is missing. That strictness is the point: the
+    // first full run of this project died because plant setup here left
+    // StepperLimits::holding_force at its 10 N header default while asking the motor
+    // for 30 m/s^2, and no layer was in a position to notice.
+    const std::string config_path =
+        config::find_file(argc > 1 ? argv[1] : "config.json", argv[0]);
 
-struct TrainConfig {
-    int iterations = 2000;
-    int steps_per_iteration = 4096;  // policy steps collected per update
+    config::Config cfg;
+    try {
+        cfg = config::load(config_path);
+    } catch (const config::Error& e) {
+        std::cerr << "config error: " << e.what() << "\n";
+        return 1;
+    }
+    std::cout << "config: " << config_path << "\n";
 
-    // Must stay 1 until RolloutBuffer handles more than one stream. Collection
-    // interleaves envs round-robin, so with E > 1 row t+1 belongs to a DIFFERENT env:
-    // finish() would bootstrap each transition off an unrelated state and run the GAE
-    // trace across all E episodes at once. Its scalar last_value cannot describe E
-    // tails either, so .item<double>() throws -- which is the intended failure. Raising
-    // this means per-env buffers, finished separately and concatenated for the update.
-    int environments = 1;
-    std::uint64_t seed = 1;
-
-    int evaluate_every = 20;    // iterations
-    int evaluation_episodes = 5;
-    const char* checkpoint_path = "policy.pt";
-
-    // Diagnostics. train_log.csv gets one row per iteration; the trajectory files get a
-    // full deterministic episode so the motion can be plotted, not just the score.
-    const char* log_path = "train_log.csv";
-    const char* trajectory_prefix = "trajectory_";
-};
-
-sim::EnvConfig plant_config() {
-    // Matches the sizing in the hardware notes: 0.25 m / 0.12 kg link on a 0.70 kg
-    // cart, 2 m rail, 30 m/s^2. Start at N=1 -- get the whole pipeline working before
-    // adding links, because the basin shrinks sharply with each one.
-    sim::EnvConfig config;
-    config.plant = core::PendulumParams::uniform_rods(1, 0.12, 0.25, 0.0, 0.70);
-    config.limits.max_accel = 30.0;
-    config.limits.max_velocity = 3.0;
-    config.limits.rail_length = 2.0;
-    config.limits.steps_per_metre = 4000.0;
-
-    // The force envelope of the 400 W servo from the hardware sizing, NOT the
-    // StepperLimits defaults. Those default to holding_force = 10 N, and 30 m/s^2 on a
-    // 0.82 kg carriage needs about 25 N -- so every episode tripped would_lose_steps()
-    // on its first plant step and ended with the -100 penalty after ~2 policy steps.
-    // The droop above the knee is kept, so the envelope still binds near top speed and
-    // the policy cannot treat the motor as infinitely strong.
-    config.limits.holding_force = 80.0;
-    config.limits.force_knee_speed = 2.5;
-    config.episode_seconds = 8.0;
-    return config;
-}
-
-}  // namespace
-
-int main() {
     // The number that says the task is solved: mean episode return approaching
     // +1 per plant step, i.e. the pendulum reaching upright early and staying there.
     // Watch the *length* too -- a rising return with short episodes means it is
     // finding a way to end early, not a way to balance.
-    TrainConfig train_config; 
-    sim::EnvConfig env_config = plant_config();
+    const config::TrainingConfig& train_config = cfg.training;
+    const sim::EnvConfig& env_config = cfg.env;
     int obs_size = sim::Env::observation_size(env_config.plant.n_links());
     int act_size = sim::Env::kActionSize;
 
@@ -93,10 +62,23 @@ int main() {
         envs.back().reset();
     }
     
-    rl::ActorCriticOptions actor_critic_options{obs_size, act_size, 64, -0.5};
+    rl::ActorCriticOptions actor_critic_options{obs_size, act_size, cfg.network.hidden,
+                                                cfg.network.initial_log_std};
     std::shared_ptr<rl::ActorCritic> net = std::make_shared<rl::ActorCritic>(actor_critic_options);
-    
+
+    // Copied field by field rather than parsed straight into rl::PpoOptions: rl/ links
+    // config/, so config/ knowing about rl/ would close a dependency cycle.
     rl::PpoOptions ppo_options;
+    ppo_options.learning_rate = cfg.ppo.learning_rate;
+    ppo_options.clip = cfg.ppo.clip;
+    ppo_options.value_coefficient = cfg.ppo.value_coefficient;
+    ppo_options.entropy_coefficient = cfg.ppo.entropy_coefficient;
+    ppo_options.max_gradient_norm = cfg.ppo.max_gradient_norm;
+    ppo_options.epochs = cfg.ppo.epochs;
+    ppo_options.minibatch_size = cfg.ppo.minibatch_size;
+    ppo_options.gamma = cfg.ppo.gamma;
+    ppo_options.lambda = cfg.ppo.lambda;
+    ppo_options.target_kl = cfg.ppo.target_kl;
     rl::Ppo ppo = rl::Ppo(net, ppo_options);
 
     rl::RolloutBuffer buffer(train_config.steps_per_iteration, obs_size, act_size);

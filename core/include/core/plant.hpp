@@ -9,6 +9,10 @@
 namespace core {
 
 // Physical description of the chain. All per-link vectors are length n_links.
+//
+// The measured geometry lives in config.json under "plant"; uniform_rods() and the
+// carriage_mass initialiser below are conveniences for tests and for the ideal-rod
+// case, not a description of any hardware.
 struct PendulumParams {
     double carriage_mass = 0.5;  // kg, everything that translates with the belt
 
