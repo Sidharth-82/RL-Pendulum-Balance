@@ -1,0 +1,83 @@
+{
+  "plant": {
+    "gravity": 9.80665,
+    "carriage_mass": 0.70,
+    "links": [
+      {
+        "mass": 0.12,
+        "length": 0.25,
+        "com_dist": 0.125,
+        "inertia": 0.000625,
+        "joint_damping": 0.0
+      }
+    ]
+  },
+  "actuator": {
+    "max_velocity": 3.0,
+    "max_accel": 30.0,
+    "steps_per_metre": 4000.0,
+    "holding_force": 80.0,
+    "force_knee_speed": 2.5,
+    "rail_length": 2.0
+  },
+  "encoder": {
+    "bits": 14,
+    "noise_std": 0.0,
+    "latency_steps": 0,
+    "derivative_cutoff_hz": 50.0
+  },
+  "env": {
+    "dt": 0.002,
+    "episode_seconds": 8.0,
+    "control_decimation": 5,
+
+    "theta_ref": [0.0],
+    "theta_start": [3.14159265358979],
+    "theta_start_spread": 0.05,
+    "omega_start_spread": 0.0,
+    "x_start_spread": 0.0,
+
+    "use_sensor_model": false,
+    "terminate_on_step_loss": true,
+
+    "position_weight": 0.1,
+    "action_weight": 0.01,
+    "rail_penalty": 100.0,
+
+    "omega_scale": 10.0
+  },
+
+  "network": {
+    "hidden": 64,
+    "initial_log_std": -0.5
+  },
+
+  "ppo": {
+    "learning_rate": 3e-4,
+    "clip": 0.2,
+    "value_coefficient": 0.5,
+
+    "entropy_coefficient": 0.01,
+
+    "max_gradient_norm": 0.5,
+    "epochs": 10,
+    "minibatch_size": 256,
+    "gamma": 0.995,
+    "lambda": 0.95,
+    "target_kl": 0.02
+  },
+
+  "training": {
+    "iterations": 2000,
+    "steps_per_iteration": 4096,
+
+    "environments": 1,
+
+    "seed": 1,
+    "evaluate_every": 20,
+    "evaluation_episodes": 5,
+    "checkpoint_path": "policy.pt",
+    "log_path": "train_log.csv",
+    "trajectory_prefix": "trajectory_"
+  }
+}
