@@ -17,6 +17,93 @@ against*, derived by running the design, not a measurement.
 
 ---
 
+## Results
+
+**N=1 swings up from hanging and balances, learned end to end.** No trajectory optimiser,
+no energy-pumping law, no mode switching, no handoff logic — one 64×64 network emitting
+carriage acceleration at 100 Hz, trained by the PPO in `rl/` against a reward that only
+ever says how upright the link is.
+
+| | |
+|---|---|
+| Best evaluation return | **3,823** of a 4,000 ceiling |
+| Iterations to solve | **60** — first evaluation past 90% of ceiling |
+| Swing-up time | **0.31 s**, hanging to within 15° and staying there |
+| Steady-state error | **0.03°**, with command effectively zero |
+| Held at ceiling | 28 of 34 evaluations, iterations 60 → 620 |
+| Cost | 670 iterations, 2.7 M policy steps, CPU only |
+
+**→ [Full training report](https://claude.ai/code/artifact/bcb578e5-8670-4a0b-9ce6-654ac8fb33ed)** —
+13 interactive charts: learning curves, PPO diagnostics, trajectories, phase portrait, and
+every number in tables underneath.
+
+### What it looks like
+
+Replays of the actual logged evaluation episodes at four points in training, rendered in
+MuJoCo. These are `core::Plant`'s own recorded states played back frame by frame — MuJoCo
+is the viewer here, not the physics.
+
+| Iteration 0 — untrained | Iteration 40 — learning |
+|---|---|
+| ![untrained](docs/media/iter0-untrained.gif) | ![learning](docs/media/iter40-learning.gif) |
+| Hangs. Actions are near-zero noise by construction — the policy head is initialised with gain 0.01 precisely so the first rollouts do not slam into the rail. | Gets it upright, then wanders to **0.96 m** of a ±1.0 m rail. Half the episode is spent above horizontal, and it never settles. |
+
+| Iteration 60 — first solve | Iteration 600 — refined |
+|---|---|
+| ![first solve](docs/media/iter60-first-solve.gif) | ![refined](docs/media/iter600-refined.gif) |
+| Upright at 0.65 s and holds. Cart swings out to 0.64 m to get there. | Upright at 0.31 s, cart peaks at 0.34 m and returns near centre. Same task, half the time and half the rail. |
+
+### Three things the run showed that the design did not predict
+
+**There is no energy pumping.** The roadmap below assumes it, and at these numbers it never
+appears. 30 m/s² is about 3g, and a 0.25 m rod has a natural period near 0.8 s, so the cart
+whips the link over inside *half a swing*. That is a property of the specified drive, not of
+the policy — an actuator sized closer to the ~7.5 N figure would have to pump, and this
+result would not transfer.
+
+**Getting upright and staying there quietly were learned hundreds of iterations apart.** At
+iteration 340 the policy held the link to within a degree by reversing the command on
+**199 of 200** steps — a limit cycle at the control rate, the behaviour that would chew
+through a real belt. By iteration 600 mean |action| in the hold was **0.000**. The term that
+decided it was `action_weight = 0.01`, a hundred times smaller than the alignment term and
+irrelevant right up until every remaining candidate was already perfectly upright.
+
+**It collapsed.** At iteration 635 a single update reported `kl 0.104` against a 0.02 target,
+`clip 0.33`, and `epochs 2` instead of 10 — the KL early-stop firing on the update that broke
+it. Episodes went from 800 steps to 10 and never recovered. Entropy had decayed to 0.06 over
+the preceding 400 iterations, leaving a near-deterministic policy with no spread left to
+absorb a large step. `entropy_coefficient = 0.01` was not enough.
+
+Two consequences worth carrying forward: **evaluation gave no warning** — the greedy policy
+scored 3,817 while the sampled rollouts it trained on were averaging 405 of 800 steps, and a
+policy that only survives with the noise turned off is one bad step from not surviving at
+all. And `torch::save` runs unconditionally on every evaluation, so **the checkpoint on disk
+is the collapsed policy**, not the one that scored 3,823. Save-on-best is the first fix.
+
+### The bug that cost the first run
+
+The first full training run died with episodes lasting **2 policy steps** and returns of
+−108 — the −100 termination penalty plus a couple of steps of hanging. The cart had not
+moved far enough to reach the rail, so the terminations had to be step loss.
+
+`plant_config()` set `max_accel = 30` m/s² but left the force envelope at the
+`StepperLimits` header defaults, where `holding_force = 10 N`. Accelerating 0.82 kg at
+30 m/s² needs about 25 N, so `would_lose_steps()` fired on the first plant step of every
+episode. The hardware sizing had already concluded a stepper could not do this job and
+specified a 400 W servo; the config simply never caught up.
+
+That is what `config.json` and its strict loader exist for. Every key is required, no
+defaults are applied, and the loader now rejects a `holding_force` below
+`(carriage_mass + Σ link masses) × max_accel` outright:
+
+```
+config error: in 'config.json': 'actuator.holding_force' is 10.000000 N but accelerating
+0.820000 kg at 30.000000 m/s^2 needs at least 24.600000 N; every episode would trip step
+loss immediately
+```
+
+---
+
 ## Status
 
 | Module | State |
@@ -24,10 +111,12 @@ against*, derived by running the design, not a measurement.
 | `core/` — plant, controller, actuator, sensors | Implemented, validated |
 | `baseline/` — linearise + Riccati LQR | Implemented, measured (N=1) |
 | `sim/` — RL environment | Implemented, 99 checks green |
-| `rl/` — PPO, actor-critic, GAE rollout buffer | Implemented; no training results recorded yet |
+| `rl/` — PPO, actor-critic, GAE rollout buffer | Implemented. **N=1 swing-up solved**, see Results |
+| `config/` — `config.json` → populated structs | Implemented, strict |
+| `tools/` — MuJoCo model generator and viewer | Implemented, replay only |
 | `pi/` — real-time control loop | Stub. Waits on hardware |
 
-10 ctest targets green as of 2026-08-12.
+10 ctest targets green as of 2026-08-13.
 
 ---
 
@@ -54,6 +143,10 @@ back out of the solve — which is what a step-loss check tests against.
 
 - **Hand-rolled ODE, not MuJoCo.** There is no contact to model, and log-and-replay
   recalibration needs identifiable physical parameters rather than solver softness knobs.
+  MuJoCo *is* in the repo now (`tools/`), but strictly as a viewer: it replays states
+  `core::Plant` already produced and never integrates anything. Keeping playback free of
+  MuJoCo's integrator means that if the two engines are ever compared, a disagreement
+  cannot be mistaken for a rendering artifact.
 - **Belt drive, not a lead screw.** A lead screw cannot accelerate fast enough for the
   ~130 ms instability time constant of a 0.25 m link.
 - **All C++ including the RL.** Hand-writing PPO is a goal of this project, not a cost.
@@ -66,14 +159,21 @@ back out of the solve — which is what a step-loss check tests against.
 ## Repository layout
 
 ```
+config.json Every hardware and run number. The single source of truth
 core/       Shared with the Pi. Eigen only, no other dependencies.
             plant, controller (2N+3 state feedback), actuator, sensors, delay_line
 baseline/   LQR: linearize + solve_dare + envelope_report
 sim/        Desktop only. The RL environment: observation, reward, termination
+config/     config.json -> populated core/sim structs. Strict: no defaults
 rl/         LibTorch. ActorCritic, RolloutBuffer (GAE), Ppo, training entry point
+tools/      Python. MuJoCo model generator and trajectory viewer
 pi/         Raspberry Pi real-time loop. Not built by the desktop configure
 tests/      Layered validation, run under ctest
 ```
+
+Dependency order is `core → sim → config → rl`, with `config/` keeping the JSON parser off
+`sim`'s include path and well away from `core`, which cross-compiles to the Pi against Eigen
+and nothing else.
 
 `pi/` deliberately links `core/` only. The trained policy arrives as **exported weights**,
 not as a LibTorch dependency — LibTorch on ARM is a heavy runtime with allocation
@@ -97,11 +197,30 @@ Builds land at `%LOCALAPPDATA%/pidrl-build/<preset>`, out of the source tree.
 baseline — `rl/` is its only consumer.
 
 The trainer is the `train` target. Run it from wherever you want its logs, since it writes
-them to the working directory:
+them to the working directory. It reads `config.json`, searching upward from the executable
+if it is not in the working directory; pass a path to override:
 
 ```powershell
 & "$env:LOCALAPPDATA\pidrl-build\msvc-release\rl\train.exe"
+& "$env:LOCALAPPDATA\pidrl-build\msvc-release\rl\train.exe" my-sweep.json
 ```
+
+### Watching it
+
+`tools/` needs Python with `mujoco` (`pip install mujoco`) and, for video export, `ffmpeg`.
+The model is **generated** from `config.json` — never hand-edit `tools/pendulum.xml`, or the
+second source of truth this project just spent a refactor eliminating comes straight back.
+
+```powershell
+python tools\make_mjcf.py                                  # config.json -> pendulum.xml
+python tools\view.py --traj <run>\trajectory_600.csv       # interactive, real time
+python tools\view.py --traj ... --end 1.5 --speed 0.2      # slow-mo swing-up
+python tools\view.py --traj ... --gif out.gif              # or --video out.mp4
+python tools\view.py                                       # just the model, hanging
+```
+
+`--end` matters more than it sounds: swing-up is 0.31 s of an 8 s episode, so the default
+view is mostly a pendulum standing still.
 
 LibTorch itself is not fetched — download the **Release**, CXX11-ABI, CPU build and point
 `CMAKE_PREFIX_PATH` at it (the presets hardcode a local path; override it in
@@ -327,7 +446,8 @@ Build in the order that lets you check each piece before the next depends on it:
    rising return with short episodes means it found a way to end early, not a way to
    balance.
 
-Solved looks like mean episode return approaching +1 per plant step.
+Solved looks like mean episode return approaching +1 per plant step. At N=1 that took **60
+iterations**; see [Results](#results).
 
 `environments` must stay 1 until `RolloutBuffer` handles more than one stream — collection
 interleaves envs round-robin, so with E > 1 row t+1 belongs to a *different* env and
@@ -413,7 +533,22 @@ Swing-up method by stage: energy pumping works at N=1 and marginally at N=2, but
 N=3**. Start with energy pumping to validate the swing-up-to-balance handoff, and replace
 it with a trajectory optimiser at N=2.
 
+*Superseded at N=1.* End-to-end PPO solved it without pumping or a handoff at all — see
+Results. Whether that survives to N=2 is genuinely unknown: the single-swing throw works
+only because the specified drive has ~3g to spend on one link, and a double pendulum has to
+get two links over the top with the same rail.
+
 Also outstanding:
+
+- **Save-on-best in the trainer.** `torch::save` currently runs on every evaluation, so a
+  late collapse overwrites the checkpoint that worked.
+- **Raise `entropy_coefficient`, or anneal it.** 0.01 let entropy decay to 0.06 and the
+  policy collapse at iteration 635.
+- **Turn on `use_sensor_model`** and re-measure. Every number in Results was obtained with
+  the policy reading true angles and exact rates.
+- **Widen the start distribution.** `theta_start_spread` is 0.05 rad with zero velocity and
+  zero cart offset, so the policy has only ever been asked to start from almost exactly
+  hanging, at rest, at centre rail.
 
 - Measure what the delay-free LQR gains lose when run through `SensorModel` and the
   actuation delay. That number sizes the gap RL exists to close.

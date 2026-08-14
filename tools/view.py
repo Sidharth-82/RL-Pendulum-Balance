@@ -110,6 +110,46 @@ def run_video(model, traj, out_path, width, height, fps, speed, distance):
           f"{speed:g}x speed)")
 
 
+def run_gif(model, traj, out_path, width, height, fps, speed, distance):
+    """Animated GIF, for embedding in the README.
+
+    GitHub renders a GIF inline; a relative-path .mp4 only becomes a link. Goes
+    through ffmpeg's palettegen rather than PIL because this scene is a few flat
+    greys plus one saturated blue, and a naive 256-colour quantisation bands the
+    floor gradient badly.
+    """
+    ffmpeg = shutil.which("ffmpeg")
+    if not ffmpeg:
+        raise SystemExit("ffmpeg not on PATH; needed for --gif")
+
+    dt = float(traj["t"][1] - traj["t"][0])
+    stride = max(1, int(round((1.0 / fps) * speed / dt)))
+    data = mujoco.MjData(model)
+    cam = make_camera(model, distance)
+
+    proc = subprocess.Popen(
+        [ffmpeg, "-y", "-loglevel", "error",
+         "-f", "rawvideo", "-pix_fmt", "rgb24",
+         "-s", f"{width}x{height}", "-r", str(fps), "-i", "-",
+         "-vf", "split[a][b];[a]palettegen=stats_mode=diff[p];"
+                "[b][p]paletteuse=dither=bayer:bayer_scale=3",
+         "-loop", "0", out_path],
+        stdin=subprocess.PIPE)
+
+    frames = 0
+    with mujoco.Renderer(model, height, width) as renderer:
+        for i in range(0, len(traj["t"]), stride):
+            set_state(model, data, traj["x"][i], traj["theta"][i])
+            renderer.update_scene(data, cam)
+            proc.stdin.write(renderer.render().tobytes())
+            frames += 1
+    proc.stdin.close()
+    if proc.wait() != 0:
+        raise SystemExit("ffmpeg failed")
+    size_kb = os.path.getsize(out_path) / 1024
+    print(f"wrote {out_path}  ({frames} frames, {size_kb:.0f} KB)")
+
+
 def run_frames(model, traj, out_dir, width, height, count, distance):
     """Evenly spaced stills -- for a report, or when there is no ffmpeg."""
     from PIL import Image
@@ -176,6 +216,7 @@ def main():
     ap.add_argument("--speed", type=float, default=1.0,
                     help="playback rate; 0.25 is useful for the swing-up itself")
     ap.add_argument("--video", help="render to this mp4 instead of opening a window")
+    ap.add_argument("--gif", help="render to this animated gif (for the README)")
     ap.add_argument("--frames", help="write evenly spaced PNG stills to this directory")
     ap.add_argument("--count", type=int, default=8, help="stills for --frames")
     ap.add_argument("--width", type=int, default=1280)
@@ -203,12 +244,15 @@ def main():
                 f"{args.model} has {n_links}; regenerate the model from the same "
                 f"config.json the run used")
 
-    if args.video or args.frames:
+    if args.video or args.frames or args.gif:
         if traj is None:
-            raise SystemExit("--video and --frames need --traj")
+            raise SystemExit("--video, --gif and --frames need --traj")
         if args.video:
             run_video(model, traj, args.video, args.width, args.height,
                       args.fps, args.speed, args.distance)
+        if args.gif:
+            run_gif(model, traj, args.gif, args.width, args.height,
+                    args.fps, args.speed, args.distance)
         if args.frames:
             run_frames(model, traj, args.frames, args.width, args.height,
                        args.count, args.distance)
