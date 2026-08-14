@@ -125,6 +125,7 @@ add_subdirectory(core)      # shared with the Pi -- Eigen only, no other deps
 add_subdirectory(baseline)  # LQR: linearize + Riccati
 add_subdirectory(sim)       # desktop only: env, rollouts, domain randomization
 add_subdirectory(config)    # config.json -> populated structs; desktop only
+add_subdirectory(tools)     # reference trajectory dumper for the MuJoCo comparison
 
 if(PIDRL_BUILD_RL)
   add_subdirectory(rl)

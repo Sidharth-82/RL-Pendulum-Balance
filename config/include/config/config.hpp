@@ -61,6 +61,7 @@ struct TrainingConfig {
     std::string checkpoint_path;
     std::string log_path;
     std::string trajectory_prefix;
+    std::string weights_path;
 };
 
 struct Config {

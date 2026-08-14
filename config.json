@@ -78,6 +78,7 @@
     "evaluation_episodes": 5,
     "checkpoint_path": "policy.pt",
     "log_path": "train_log.csv",
-    "trajectory_prefix": "trajectory_"
+    "trajectory_prefix": "trajectory_",
+    "weights_path": "policy_weights.txt"
   }
 }

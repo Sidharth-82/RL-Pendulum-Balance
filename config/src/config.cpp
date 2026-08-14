@@ -224,6 +224,7 @@ Config load(const std::string& path) {
         cfg.training.checkpoint_path = training.at("checkpoint_path").text();
         cfg.training.log_path = training.at("log_path").text();
         cfg.training.trajectory_prefix = training.at("trajectory_prefix").text();
+        cfg.training.weights_path = training.at("weights_path").text();
 
         // --- cross-field checks ----------------------------------------------
         // Individually valid numbers that cannot be true together. Each of these

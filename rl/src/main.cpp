@@ -15,6 +15,7 @@
 //      Those move first and tell you which knob is wrong.
 
 #include <fstream>
+#include <limits>
 #include <iomanip>
 #include <iostream>
 #include <string>
@@ -26,6 +27,42 @@
 #include "rl/ppo.hpp"
 #include "rl/rollout.hpp"
 #include "sim/env.hpp"
+
+namespace {
+
+// Dumps every registered parameter as plain text: a name line carrying the shape,
+// then the values. Read by tools/policy_rollout.py.
+//
+// Not TorchScript. The actor is three Linear layers and two tanhs; reimplementing
+// that forward pass in numpy is five lines, whereas scripting a hand-written
+// Module and getting LibTorch loadable from Python is an afternoon of yak-shaving
+// for the same result.
+void export_weights(rl::ActorCritic& net, const std::string& path) {
+    std::ofstream out(path);
+    out << std::setprecision(9);
+    for (const auto& item : net.named_parameters()) {
+        const torch::Tensor t =
+            item.value().detach().to(torch::kFloat64).contiguous();
+        out << item.key();
+        for (const auto s : t.sizes()) { out << ' ' << s; }
+        out << '\n';
+        const double* data = t.data_ptr<double>();
+        for (std::int64_t i = 0; i < t.numel(); ++i) {
+            out << data[i] << (i + 1 == t.numel() ? '\n' : ' ');
+        }
+    }
+}
+
+// "policy_weights.txt", 60 -> "policy_weights_60.txt". Per-evaluation snapshots so
+// the policy can be driven again at any point in its training, not only at its best.
+std::string with_iteration(const std::string& path, int iteration) {
+    const std::size_t dot = path.find_last_of('.');
+    const std::string tag = "_" + std::to_string(iteration);
+    return dot == std::string::npos ? path + tag
+                                    : path.substr(0, dot) + tag + path.substr(dot);
+}
+
+}  // namespace
 
 int main(int argc, char** argv) {
     // Every hardware and run number lives in config.json. Nothing is hard-coded here,
@@ -85,6 +122,9 @@ int main(int argc, char** argv) {
 
     std::vector<double> ep_return(train_config.environments, 0.0);
     std::vector<int> ep_length(train_config.environments, 0);
+    // Highest evaluation score seen. Only a new best is written to disk.
+    double best_eval_return = -std::numeric_limits<double>::infinity();
+
     std::vector<std::tuple<double, int>> recent;
     recent.reserve(20);
 
@@ -244,8 +284,24 @@ int main(int argc, char** argv) {
 
         if (evaluated) {
             std::cout << "      eval ret " << eval_mean_return
-                      << "  len " << eval_mean_length << std::endl;
-            torch::save(net, train_config.checkpoint_path);
+                      << "  len " << eval_mean_length;
+
+            // A snapshot every evaluation, so a rollout can be run at any point in
+            // training. ~120 KB each at this network size, which is cheaper than
+            // rerunning training to see what the policy looked like at iteration 40.
+            export_weights(*net, with_iteration(train_config.weights_path, i));
+
+            // Save ONLY on a new best. Saving unconditionally means a late collapse
+            // overwrites the policy that worked -- which is exactly what happened on
+            // the first full run: iteration 635 destroyed a policy scoring 3823, and
+            // the next evaluation wrote the wreckage over it. There is no undo.
+            if (eval_mean_return > best_eval_return) {
+                best_eval_return = eval_mean_return;
+                torch::save(net, train_config.checkpoint_path);
+                export_weights(*net, train_config.weights_path);
+                std::cout << "   <- best, saved";
+            }
+            std::cout << std::endl;
         }
 
         // Blank rather than 0 on non-evaluation iterations: a zero would plot as a real

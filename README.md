@@ -39,19 +39,33 @@ every number in tables underneath.
 
 ### What it looks like
 
-Replays of the actual logged evaluation episodes at four points in training, rendered in
-MuJoCo. These are `core::Plant`'s own recorded states played back frame by frame — MuJoCo
-is the viewer here, not the physics.
+**The exported policy weights driving MuJoCo, closed loop.** MuJoCo integrates the
+dynamics, the network reads MuJoCo's own state each control step and chooses the carriage
+acceleration, and the loop closes. Nothing is replayed.
 
-| Iteration 0 — untrained | Iteration 40 — learning |
-|---|---|
-| ![untrained](docs/media/iter0-untrained.gif) | ![learning](docs/media/iter40-learning.gif) |
-| Hangs. Actions are near-zero noise by construction — the policy head is initialised with gain 0.01 precisely so the first rollouts do not slam into the rail. | Gets it upright, then wanders to **0.96 m** of a ±1.0 m rail. Half the episode is spent above horizontal, and it never settles. |
+That makes these a transfer test, not a rendering. The policy was trained entirely against
+`core::Plant` and had never seen MuJoCo — a second engine, with its mass matrix built by
+composite-rigid-body off the generated MJCF rather than from the hand-derived Lagrangian.
+All four clips are the first 4 seconds at real time, from the same start: hanging, at rest,
+centre rail.
 
-| Iteration 60 — first solve | Iteration 600 — refined |
+| Iteration 0 — untrained | Iteration 30 — surviving |
 |---|---|
-| ![first solve](docs/media/iter60-first-solve.gif) | ![refined](docs/media/iter600-refined.gif) |
-| Upright at 0.65 s and holds. Cart swings out to 0.64 m to get there. | Upright at 0.31 s, cart peaks at 0.34 m and returns near centre. Same task, half the time and half the rail. |
+| ![untrained](docs/media/policy-iter0.gif) | ![surviving](docs/media/policy-iter30.gif) |
+| Off the rail after **1.76 s** and never upright. Initial actions are near-zero noise by construction — the policy head is initialised with gain 0.01 — so this is a policy pushed off by its own exploration, not one flailing. | Lasts the full 8 s but never settles, ending at **15.8°** and using **0.96 m** of a ±1.0 m rail. It has learned not to die, which is the cheaper half of the reward. |
+
+| Iteration 70 — balancing, badly | Iteration 190 — solved |
+|---|---|
+| ![balancing](docs/media/policy-iter70.gif) | ![solved](docs/media/policy-iter190.gif) |
+| Gets there, eventually: upright at **6.9 s**, ending at 4.0°, still wandering out to **0.86 m**. Worth watching next to the clip on the right — the task is the same and so is the score, nearly. | Upright at **0.40 s**, ends at **0.01°**, peaks at **0.40 m**. Same task, a seventeenth of the time and less than half the rail. |
+
+Full-quality video of the final policy: [`docs/media/policy-final.mp4`](docs/media/policy-final.mp4).
+Reproduce any of it, or watch it interactively:
+
+```powershell
+python tools\policy_rollout.py <run>\policy_weights_190.txt --csv closed.csv
+python tools\view.py --traj closed.csv --end 1.5 --speed 0.2
+```
 
 ### Three things the run showed that the design did not predict
 
@@ -77,8 +91,11 @@ absorb a large step. `entropy_coefficient = 0.01` was not enough.
 Two consequences worth carrying forward: **evaluation gave no warning** — the greedy policy
 scored 3,817 while the sampled rollouts it trained on were averaging 405 of 800 steps, and a
 policy that only survives with the noise turned off is one bad step from not surviving at
-all. And `torch::save` runs unconditionally on every evaluation, so **the checkpoint on disk
-is the collapsed policy**, not the one that scored 3,823. Save-on-best is the first fix.
+all. And `torch::save` ran unconditionally on every evaluation, so **the checkpoint on disk
+was the collapsed policy**, not the one that scored 3,823 — there is no undo for that.
+Since fixed: the trainer writes a checkpoint only on a new best, plus a
+`policy_weights_<iter>.txt` snapshot at every evaluation, which is what the clips above are
+driven from.
 
 ### The bug that cost the first run
 
@@ -113,7 +130,7 @@ loss immediately
 | `sim/` — RL environment | Implemented, 99 checks green |
 | `rl/` — PPO, actor-critic, GAE rollout buffer | Implemented. **N=1 swing-up solved**, see Results |
 | `config/` — `config.json` → populated structs | Implemented, strict |
-| `tools/` — MuJoCo model generator and viewer | Implemented, replay only |
+| `tools/` — MuJoCo model, viewer, closed-loop rollout, cross-engine check | Implemented, validated |
 | `pi/` — real-time control loop | Stub. Waits on hardware |
 
 10 ctest targets green as of 2026-08-13.
@@ -143,10 +160,12 @@ back out of the solve — which is what a step-loss check tests against.
 
 - **Hand-rolled ODE, not MuJoCo.** There is no contact to model, and log-and-replay
   recalibration needs identifiable physical parameters rather than solver softness knobs.
-  MuJoCo *is* in the repo now (`tools/`), but strictly as a viewer: it replays states
-  `core::Plant` already produced and never integrates anything. Keeping playback free of
-  MuJoCo's integrator means that if the two engines are ever compared, a disagreement
-  cannot be mistaken for a rendering artifact.
+  MuJoCo *is* in the repo now (`tools/`), in two distinct roles that are worth keeping
+  apart. `view.py` **replays** — it writes recorded states into `qpos` and never
+  integrates, so what you watch is what happened, not MuJoCo's opinion of it.
+  `compare_mujoco.py` and `policy_rollout.py` **simulate**, and exist to check
+  `core::Plant` against an engine that shares none of its derivation. Neither is in the
+  training loop: `core::Plant` stays the physics.
 - **Belt drive, not a lead screw.** A lead screw cannot accelerate fast enough for the
   ~130 ms instability time constant of a 0.25 m link.
 - **All C++ including the RL.** Hand-writing PPO is a goal of this project, not a cost.
@@ -166,7 +185,9 @@ baseline/   LQR: linearize + solve_dare + envelope_report
 sim/        Desktop only. The RL environment: observation, reward, termination
 config/     config.json -> populated core/sim structs. Strict: no defaults
 rl/         LibTorch. ActorCritic, RolloutBuffer (GAE), Ppo, training entry point
-tools/      Python. MuJoCo model generator and trajectory viewer
+tools/      MuJoCo. make_mjcf (config.json -> MJCF), view (replay), reference_traj
+            (C++, core::Plant reference), compare_mujoco (cross-engine check),
+            policy_rollout (exported weights driving MuJoCo, closed loop)
 pi/         Raspberry Pi real-time loop. Not built by the desktop configure
 tests/      Layered validation, run under ctest
 ```
@@ -261,6 +282,38 @@ closes a hole the one below it cannot see.
 | `energy_conservation` | N=1..3 with deliberately dissimilar links. Checks `Plant::energy` against link geometry, then conservation under RK4, then belt force via the work-energy theorem |
 | `lqr_test` | 181 checks on the baseline pipeline |
 | `env_test` | 99 checks on the RL contract |
+| `tools/compare_mujoco.py` | The derivation itself, against a second engine |
+
+**The MuJoCo comparison is the only check that is genuinely independent.** The energy tests
+prove `Plant::accel` is self-consistent with `Plant::energy` — both written from the same
+derivation, so a misread convention that is self-consistent passes them. MuJoCo builds its
+mass matrix with composite-rigid-body and its bias force with recursive Newton-Euler,
+straight off the generated MJCF; the two share nothing but `config.json`.
+
+```
+tools\reference_traj.exe --mode driven --out ref.csv   # core::Plant, prescribed a(t)
+python tools/compare_mujoco.py ref.csv                 # same input through MuJoCo
+```
+
+It is judged on **convergence, not raw error**. The engines hold different quantities
+constant across a step — MuJoCo a force, `core::Plant` an acceleration — a first-order
+difference that vanishes as the step shrinks, and the driven pendulum then amplifies
+whatever seed it leaves (5.7e-3 → 1.87 rad between 1 s and 2 s). Refining the step is what
+separates discretisation from a wrong model:
+
+| | 0.2 s error, ×1 | ×16 | ratio | |
+|---|---|---|---|---|
+| as generated | 1.4e-4 | 9.3e-6 | **15.4** | PASS |
+| inertia +10% | 2.0e-2 | 2.0e-2 | 1.0 | caught |
+| `com_dist` 0.125→0.11 | 4.7e-2 | 4.7e-2 | 1.0 | caught |
+| link mass +10% | 1.8e-2 | 1.9e-2 | 1.0 | caught |
+| hinge axis flipped | 6.7e-1 | 6.7e-1 | 1.0 | caught |
+
+Driving the cart needed care: `core::Plant` treats the carriage as a prescribed-acceleration
+boundary condition and MuJoCo has no such joint. A stiff position servo tracks with a lag
+that looks exactly like the error the test exists to find, so the force is solved from
+MuJoCo's own mass matrix instead — `a_links = −M₁₁⁻¹(M₁₀a + c₁)`, then
+`F = M₀₀a + M₀₁a_links + c₀`. That holds the constraint to 1.5e-16 m/s².
 
 Measured numbers:
 
@@ -540,8 +593,6 @@ get two links over the top with the same rail.
 
 Also outstanding:
 
-- **Save-on-best in the trainer.** `torch::save` currently runs on every evaluation, so a
-  late collapse overwrites the checkpoint that worked.
 - **Raise `entropy_coefficient`, or anneal it.** 0.01 let entropy decay to 0.06 and the
   policy collapse at iteration 635.
 - **Turn on `use_sensor_model`** and re-measure. Every number in Results was obtained with
@@ -549,7 +600,9 @@ Also outstanding:
 - **Widen the start distribution.** `theta_start_spread` is 0.05 rad with zero velocity and
   zero cart offset, so the policy has only ever been asked to start from almost exactly
   hanging, at rest, at centre rail.
-
+- **Run `compare_mujoco` at N=2 and N=3.** The cross-engine check currently passes at N=1,
+  where the `D_ik` cross terms are absent — which is exactly where a derivation error would
+  hide. It is a one-line config change and the tooling already handles it.
 - Measure what the delay-free LQR gains lose when run through `SensorModel` and the
   actuation delay. That number sizes the gap RL exists to close.
 - Domain randomisation. Width should track how well each parameter is known, not a uniform
