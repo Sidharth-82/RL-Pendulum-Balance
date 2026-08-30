@@ -1,0 +1,128 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 382" width="760" height="382" role="img" aria-label="Command reversals during the hold. Share of consecutive control steps that flip the command sign, over the last 2 s. High values are the limit cycle; it is invisible in the return.">
+<style>.r { --surface: #fcfcfb; --ink: #0b0b0b; --ink2: #52514e; --muted: #898781; --grid: #e1e0d9; --axis: #c3c2b7; --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; }@media (prefers-color-scheme: dark) { .r { --surface: #1a1a19; --ink: #ffffff; --ink2: #c3c2b7; --muted: #898781; --grid: #2c2c2a; --axis: #383835; --s1: #3987e5; --s2: #d95926; --s3: #199e70; } }.bg { fill: var(--surface); }.grid { stroke: var(--grid); stroke-width: 1; }.axis { stroke: var(--axis); stroke-width: 1; }.rule { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 3 4; }.rule-label { fill: var(--muted); font-size: 10.5px; text-anchor: start; }.tick { fill: var(--muted); font-size: 11px; }.ty { text-anchor: end; } .tx { text-anchor: middle; }.axis-title { fill: var(--muted); font-size: 11.5px; text-anchor: middle; }.line { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }.line.dashed { stroke-dasharray: 5 4; }.dot { stroke: var(--surface); stroke-width: 2; }.direct { font-size: 11.5px; font-weight: 600; }.s1 { stroke: var(--s1); } .s2 { stroke: var(--s2); } .s3 { stroke: var(--s3); }circle.s1 { fill: var(--s1); } circle.s2 { fill: var(--s2); } circle.s3 { fill: var(--s3); }text.s1 { fill: var(--s1); stroke: none; }text.s2 { fill: var(--s2); stroke: none; }text.s3 { fill: var(--s3); stroke: none; }rect.s1 { fill: var(--s1); } rect.s2 { fill: var(--s2); } rect.s3 { fill: var(--s3); }.t { fill: var(--ink); font-size: 15px; font-weight: 620; }.st { fill: var(--ink2); font-size: 11.5px; }.lg { fill: var(--ink2); font-size: 11.5px; }svg { font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; }</style>
+<g class="r"><rect class="bg" x="0" y="0" width="760" height="382" rx="10"/>
+<text class="t" x="26" y="26">Command reversals during the hold</text>
+<text class="st" x="26" y="44">Share of consecutive control steps that flip the command sign, over the last 2 s. High values are the limit cycle;...</text>
+<line class="grid" x1="66" y1="312.0" x2="652" y2="312.0"/>
+<text class="tick ty" x="56" y="316.0">0</text>
+<line class="grid" x1="66" y1="263.2" x2="652" y2="263.2"/>
+<text class="tick ty" x="56" y="267.2">1</text>
+<line class="grid" x1="66" y1="214.4" x2="652" y2="214.4"/>
+<text class="tick ty" x="56" y="218.4">2</text>
+<line class="grid" x1="66" y1="165.6" x2="652" y2="165.6"/>
+<text class="tick ty" x="56" y="169.6">3</text>
+<line class="grid" x1="66" y1="116.8" x2="652" y2="116.8"/>
+<text class="tick ty" x="56" y="120.8">4</text>
+<line class="grid" x1="66" y1="68.0" x2="652" y2="68.0"/>
+<text class="tick ty" x="56" y="72.0">5</text>
+<text class="tick tx" x="66.0" y="334">0</text>
+<text class="tick tx" x="212.5" y="334">500</text>
+<text class="tick tx" x="359.0" y="334">1,000</text>
+<text class="tick tx" x="505.5" y="334">1,500</text>
+<text class="tick tx" x="652.0" y="334">2,000</text>
+<line class="axis" x1="66" y1="312" x2="652" y2="312"/>
+<polyline class="line s1" points="66.0,263.2 71.9,116.8 77.7,68.0 83.6,116.8 89.4,165.6 95.3,206.5 101.2,312.0 107.0,312.0 112.9,287.6 118.7,287.6 124.6,287.6 130.5,287.6 136.3,287.6 142.2,287.6 148.0,287.6 153.9,287.6 159.8,287.6 165.6,312.0 171.5,287.6 177.3,287.6 183.2,312.0 189.1,312.0 194.9,287.6 200.8,287.6 206.6,287.6 212.5,238.8 218.4,287.6 224.2,287.6 230.1,287.6 235.9,312.0 241.8,312.0 247.7,312.0 253.5,287.6 259.4,287.6 265.2,287.6 271.1,287.6 277.0,154.6 282.8,287.6 288.7,287.6 294.5,287.6 300.4,287.6 306.3,287.6 312.1,312.0 318.0,312.0 323.8,312.0 329.7,312.0 335.6,312.0 341.4,312.0 347.3,312.0 353.1,312.0 359.0,312.0 364.9,312.0 370.7,312.0 376.6,312.0 382.4,312.0 388.3,312.0 394.2,312.0 400.0,312.0 405.9,312.0 411.7,312.0 417.6,312.0 423.5,312.0 429.3,312.0 435.2,312.0 441.0,312.0 446.9,312.0 452.8,312.0 458.6,312.0 464.5,312.0 470.3,312.0 476.2,312.0 482.1,312.0 487.9,312.0 493.8,312.0 499.6,312.0 505.5,312.0 511.4,312.0 517.2,312.0 523.1,312.0 528.9,312.0 534.8,312.0 540.7,312.0 546.5,312.0 552.4,312.0 558.2,312.0 564.1,312.0 570.0,312.0 575.8,312.0 581.7,312.0 587.5,312.0 593.4,312.0 599.3,312.0 605.1,312.0 611.0,312.0 616.8,312.0 622.7,312.0 628.6,312.0 634.4,312.0 640.3,312.0 646.1,312.0"/>
+<circle class="dot s1" cx="66.0" cy="263.2" r="3.2"/>
+<circle class="dot s1" cx="71.9" cy="116.8" r="3.2"/>
+<circle class="dot s1" cx="77.7" cy="68.0" r="3.2"/>
+<circle class="dot s1" cx="83.6" cy="116.8" r="3.2"/>
+<circle class="dot s1" cx="89.4" cy="165.6" r="3.2"/>
+<circle class="dot s1" cx="95.3" cy="206.5" r="3.2"/>
+<circle class="dot s1" cx="101.2" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="107.0" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="112.9" cy="287.6" r="3.2"/>
+<circle class="dot s1" cx="118.7" cy="287.6" r="3.2"/>
+<circle class="dot s1" cx="124.6" cy="287.6" r="3.2"/>
+<circle class="dot s1" cx="130.5" cy="287.6" r="3.2"/>
+<circle class="dot s1" cx="136.3" cy="287.6" r="3.2"/>
+<circle class="dot s1" cx="142.2" cy="287.6" r="3.2"/>
+<circle class="dot s1" cx="148.0" cy="287.6" r="3.2"/>
+<circle class="dot s1" cx="153.9" cy="287.6" r="3.2"/>
+<circle class="dot s1" cx="159.8" cy="287.6" r="3.2"/>
+<circle class="dot s1" cx="165.6" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="171.5" cy="287.6" r="3.2"/>
+<circle class="dot s1" cx="177.3" cy="287.6" r="3.2"/>
+<circle class="dot s1" cx="183.2" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="189.1" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="194.9" cy="287.6" r="3.2"/>
+<circle class="dot s1" cx="200.8" cy="287.6" r="3.2"/>
+<circle class="dot s1" cx="206.6" cy="287.6" r="3.2"/>
+<circle class="dot s1" cx="212.5" cy="238.8" r="3.2"/>
+<circle class="dot s1" cx="218.4" cy="287.6" r="3.2"/>
+<circle class="dot s1" cx="224.2" cy="287.6" r="3.2"/>
+<circle class="dot s1" cx="230.1" cy="287.6" r="3.2"/>
+<circle class="dot s1" cx="235.9" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="241.8" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="247.7" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="253.5" cy="287.6" r="3.2"/>
+<circle class="dot s1" cx="259.4" cy="287.6" r="3.2"/>
+<circle class="dot s1" cx="265.2" cy="287.6" r="3.2"/>
+<circle class="dot s1" cx="271.1" cy="287.6" r="3.2"/>
+<circle class="dot s1" cx="277.0" cy="154.6" r="3.2"/>
+<circle class="dot s1" cx="282.8" cy="287.6" r="3.2"/>
+<circle class="dot s1" cx="288.7" cy="287.6" r="3.2"/>
+<circle class="dot s1" cx="294.5" cy="287.6" r="3.2"/>
+<circle class="dot s1" cx="300.4" cy="287.6" r="3.2"/>
+<circle class="dot s1" cx="306.3" cy="287.6" r="3.2"/>
+<circle class="dot s1" cx="312.1" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="318.0" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="323.8" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="329.7" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="335.6" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="341.4" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="347.3" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="353.1" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="359.0" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="364.9" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="370.7" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="376.6" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="382.4" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="388.3" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="394.2" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="400.0" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="405.9" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="411.7" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="417.6" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="423.5" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="429.3" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="435.2" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="441.0" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="446.9" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="452.8" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="458.6" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="464.5" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="470.3" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="476.2" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="482.1" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="487.9" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="493.8" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="499.6" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="505.5" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="511.4" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="517.2" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="523.1" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="528.9" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="534.8" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="540.7" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="546.5" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="552.4" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="558.2" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="564.1" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="570.0" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="575.8" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="581.7" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="587.5" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="593.4" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="599.3" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="605.1" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="611.0" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="616.8" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="622.7" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="628.6" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="634.4" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="640.3" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="646.1" cy="312.0" r="3.2"/>
+<text class="direct s1" x="654.1" y="316.0">reversal rate</text>
+<text class="axis-title ax-y" x="14" y="190" transform="rotate(-90 14 190)">percent of steps</text>
+<text class="axis-title ax-x" x="359" y="348">iteration</text>
+</g></svg>

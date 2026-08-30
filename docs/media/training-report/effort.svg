@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 382" width="760" height="382" role="img" aria-label="Mean command magnitude during the hold. Average |action| over the last 2 s. Driven to zero by the effort penalty, which is a hundred times smaller than the alignment term.">
+<style>.r { --surface: #fcfcfb; --ink: #0b0b0b; --ink2: #52514e; --muted: #898781; --grid: #e1e0d9; --axis: #c3c2b7; --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; }@media (prefers-color-scheme: dark) { .r { --surface: #1a1a19; --ink: #ffffff; --ink2: #c3c2b7; --muted: #898781; --grid: #2c2c2a; --axis: #383835; --s1: #3987e5; --s2: #d95926; --s3: #199e70; } }.bg { fill: var(--surface); }.grid { stroke: var(--grid); stroke-width: 1; }.axis { stroke: var(--axis); stroke-width: 1; }.rule { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 3 4; }.rule-label { fill: var(--muted); font-size: 10.5px; text-anchor: start; }.tick { fill: var(--muted); font-size: 11px; }.ty { text-anchor: end; } .tx { text-anchor: middle; }.axis-title { fill: var(--muted); font-size: 11.5px; text-anchor: middle; }.line { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }.line.dashed { stroke-dasharray: 5 4; }.dot { stroke: var(--surface); stroke-width: 2; }.direct { font-size: 11.5px; font-weight: 600; }.s1 { stroke: var(--s1); } .s2 { stroke: var(--s2); } .s3 { stroke: var(--s3); }circle.s1 { fill: var(--s1); } circle.s2 { fill: var(--s2); } circle.s3 { fill: var(--s3); }text.s1 { fill: var(--s1); stroke: none; }text.s2 { fill: var(--s2); stroke: none; }text.s3 { fill: var(--s3); stroke: none; }rect.s1 { fill: var(--s1); } rect.s2 { fill: var(--s2); } rect.s3 { fill: var(--s3); }.t { fill: var(--ink); font-size: 15px; font-weight: 620; }.st { fill: var(--ink2); font-size: 11.5px; }.lg { fill: var(--ink2); font-size: 11.5px; }svg { font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; }</style>
+<g class="r"><rect class="bg" x="0" y="0" width="760" height="382" rx="10"/>
+<text class="t" x="26" y="26">Mean command magnitude during the hold</text>
+<text class="st" x="26" y="44">Average |action| over the last 2 s. Driven to zero by the effort penalty, which is a hundred times smaller than the...</text>
+<line class="grid" x1="66" y1="312.0" x2="652" y2="312.0"/>
+<text class="tick ty" x="56" y="316.0">0</text>
+<line class="grid" x1="66" y1="230.7" x2="652" y2="230.7"/>
+<text class="tick ty" x="56" y="234.7">1</text>
+<line class="grid" x1="66" y1="149.3" x2="652" y2="149.3"/>
+<text class="tick ty" x="56" y="153.3">2</text>
+<line class="grid" x1="66" y1="68.0" x2="652" y2="68.0"/>
+<text class="tick ty" x="56" y="72.0">3</text>
+<text class="tick tx" x="66.0" y="334">0</text>
+<text class="tick tx" x="212.5" y="334">500</text>
+<text class="tick tx" x="359.0" y="334">1,000</text>
+<text class="tick tx" x="505.5" y="334">1,500</text>
+<text class="tick tx" x="652.0" y="334">2,000</text>
+<line class="axis" x1="66" y1="312" x2="652" y2="312"/>
+<polyline class="line s1" points="66.0,306.2 71.9,297.7 77.7,298.1 83.6,298.1 89.4,300.6 95.3,297.0 101.2,312.0 107.0,312.0 112.9,312.0 118.7,312.0 124.6,312.0 130.5,312.0 136.3,312.0 142.2,312.0 148.0,312.0 153.9,312.0 159.8,312.0 165.6,312.0 171.5,312.0 177.3,312.0 183.2,312.0 189.1,312.0 194.9,312.0 200.8,312.0 206.6,312.0 212.5,312.0 218.4,312.0 224.2,312.0 230.1,312.0 235.9,121.4 241.8,128.7 247.7,135.5 253.5,312.0 259.4,312.0 265.2,312.0 271.1,312.0 277.0,145.3 282.8,312.0 288.7,312.0 294.5,312.0 300.4,312.0 306.3,312.0 312.1,189.6 318.0,185.6 323.8,189.2 329.7,182.3 335.6,192.5 341.4,188.6 347.3,185.8 353.1,186.2 359.0,186.0 364.9,182.4 370.7,177.2 376.6,172.7 382.4,180.2 388.3,180.8 394.2,176.3 400.0,174.9 405.9,175.8 411.7,177.0 417.6,181.4 423.5,182.4 429.3,184.2 435.2,186.8 441.0,189.6 446.9,192.0 452.8,189.0 458.6,189.6 464.5,190.5 470.3,191.0 476.2,190.2 482.1,189.6 487.9,191.7 493.8,197.6 499.6,192.7 505.5,192.5 511.4,190.9 517.2,190.4 523.1,193.1 528.9,188.8 534.8,188.9 540.7,191.9 546.5,189.5 552.4,190.2 558.2,189.7 564.1,191.2 570.0,190.5 575.8,190.9 581.7,183.5 587.5,183.5 593.4,185.7 599.3,184.2 605.1,185.3 611.0,187.8 616.8,179.3 622.7,177.7 628.6,174.2 634.4,170.6 640.3,177.6 646.1,177.8"/>
+<circle class="dot s1" cx="66.0" cy="306.2" r="3.2"/>
+<circle class="dot s1" cx="71.9" cy="297.7" r="3.2"/>
+<circle class="dot s1" cx="77.7" cy="298.1" r="3.2"/>
+<circle class="dot s1" cx="83.6" cy="298.1" r="3.2"/>
+<circle class="dot s1" cx="89.4" cy="300.6" r="3.2"/>
+<circle class="dot s1" cx="95.3" cy="297.0" r="3.2"/>
+<circle class="dot s1" cx="101.2" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="107.0" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="112.9" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="118.7" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="124.6" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="130.5" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="136.3" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="142.2" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="148.0" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="153.9" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="159.8" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="165.6" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="171.5" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="177.3" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="183.2" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="189.1" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="194.9" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="200.8" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="206.6" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="212.5" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="218.4" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="224.2" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="230.1" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="235.9" cy="121.4" r="3.2"/>
+<circle class="dot s1" cx="241.8" cy="128.7" r="3.2"/>
+<circle class="dot s1" cx="247.7" cy="135.5" r="3.2"/>
+<circle class="dot s1" cx="253.5" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="259.4" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="265.2" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="271.1" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="277.0" cy="145.3" r="3.2"/>
+<circle class="dot s1" cx="282.8" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="288.7" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="294.5" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="300.4" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="306.3" cy="312.0" r="3.2"/>
+<circle class="dot s1" cx="312.1" cy="189.6" r="3.2"/>
+<circle class="dot s1" cx="318.0" cy="185.6" r="3.2"/>
+<circle class="dot s1" cx="323.8" cy="189.2" r="3.2"/>
+<circle class="dot s1" cx="329.7" cy="182.3" r="3.2"/>
+<circle class="dot s1" cx="335.6" cy="192.5" r="3.2"/>
+<circle class="dot s1" cx="341.4" cy="188.6" r="3.2"/>
+<circle class="dot s1" cx="347.3" cy="185.8" r="3.2"/>
+<circle class="dot s1" cx="353.1" cy="186.2" r="3.2"/>
+<circle class="dot s1" cx="359.0" cy="186.0" r="3.2"/>
+<circle class="dot s1" cx="364.9" cy="182.4" r="3.2"/>
+<circle class="dot s1" cx="370.7" cy="177.2" r="3.2"/>
+<circle class="dot s1" cx="376.6" cy="172.7" r="3.2"/>
+<circle class="dot s1" cx="382.4" cy="180.2" r="3.2"/>
+<circle class="dot s1" cx="388.3" cy="180.8" r="3.2"/>
+<circle class="dot s1" cx="394.2" cy="176.3" r="3.2"/>
+<circle class="dot s1" cx="400.0" cy="174.9" r="3.2"/>
+<circle class="dot s1" cx="405.9" cy="175.8" r="3.2"/>
+<circle class="dot s1" cx="411.7" cy="177.0" r="3.2"/>
+<circle class="dot s1" cx="417.6" cy="181.4" r="3.2"/>
+<circle class="dot s1" cx="423.5" cy="182.4" r="3.2"/>
+<circle class="dot s1" cx="429.3" cy="184.2" r="3.2"/>
+<circle class="dot s1" cx="435.2" cy="186.8" r="3.2"/>
+<circle class="dot s1" cx="441.0" cy="189.6" r="3.2"/>
+<circle class="dot s1" cx="446.9" cy="192.0" r="3.2"/>
+<circle class="dot s1" cx="452.8" cy="189.0" r="3.2"/>
+<circle class="dot s1" cx="458.6" cy="189.6" r="3.2"/>
+<circle class="dot s1" cx="464.5" cy="190.5" r="3.2"/>
+<circle class="dot s1" cx="470.3" cy="191.0" r="3.2"/>
+<circle class="dot s1" cx="476.2" cy="190.2" r="3.2"/>
+<circle class="dot s1" cx="482.1" cy="189.6" r="3.2"/>
+<circle class="dot s1" cx="487.9" cy="191.7" r="3.2"/>
+<circle class="dot s1" cx="493.8" cy="197.6" r="3.2"/>
+<circle class="dot s1" cx="499.6" cy="192.7" r="3.2"/>
+<circle class="dot s1" cx="505.5" cy="192.5" r="3.2"/>
+<circle class="dot s1" cx="511.4" cy="190.9" r="3.2"/>
+<circle class="dot s1" cx="517.2" cy="190.4" r="3.2"/>
+<circle class="dot s1" cx="523.1" cy="193.1" r="3.2"/>
+<circle class="dot s1" cx="528.9" cy="188.8" r="3.2"/>
+<circle class="dot s1" cx="534.8" cy="188.9" r="3.2"/>
+<circle class="dot s1" cx="540.7" cy="191.9" r="3.2"/>
+<circle class="dot s1" cx="546.5" cy="189.5" r="3.2"/>
+<circle class="dot s1" cx="552.4" cy="190.2" r="3.2"/>
+<circle class="dot s1" cx="558.2" cy="189.7" r="3.2"/>
+<circle class="dot s1" cx="564.1" cy="191.2" r="3.2"/>
+<circle class="dot s1" cx="570.0" cy="190.5" r="3.2"/>
+<circle class="dot s1" cx="575.8" cy="190.9" r="3.2"/>
+<circle class="dot s1" cx="581.7" cy="183.5" r="3.2"/>
+<circle class="dot s1" cx="587.5" cy="183.5" r="3.2"/>
+<circle class="dot s1" cx="593.4" cy="185.7" r="3.2"/>
+<circle class="dot s1" cx="599.3" cy="184.2" r="3.2"/>
+<circle class="dot s1" cx="605.1" cy="185.3" r="3.2"/>
+<circle class="dot s1" cx="611.0" cy="187.8" r="3.2"/>
+<circle class="dot s1" cx="616.8" cy="179.3" r="3.2"/>
+<circle class="dot s1" cx="622.7" cy="177.7" r="3.2"/>
+<circle class="dot s1" cx="628.6" cy="174.2" r="3.2"/>
+<circle class="dot s1" cx="634.4" cy="170.6" r="3.2"/>
+<circle class="dot s1" cx="640.3" cy="177.6" r="3.2"/>
+<circle class="dot s1" cx="646.1" cy="177.8" r="3.2"/>
+<text class="direct s1" x="654.1" y="181.8">hold effort</text>
+<text class="axis-title ax-y" x="14" y="190" transform="rotate(-90 14 190)">mean |action|</text>
+<text class="axis-title ax-x" x="359" y="348">iteration</text>
+</g></svg>

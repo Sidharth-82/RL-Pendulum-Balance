@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 382" width="760" height="382" role="img" aria-label="Swing-up time. First moment the tilt enters the 15 degree cone and never leaves it again. Blank where the policy never got there and stayed.">
+<style>.r { --surface: #fcfcfb; --ink: #0b0b0b; --ink2: #52514e; --muted: #898781; --grid: #e1e0d9; --axis: #c3c2b7; --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; }@media (prefers-color-scheme: dark) { .r { --surface: #1a1a19; --ink: #ffffff; --ink2: #c3c2b7; --muted: #898781; --grid: #2c2c2a; --axis: #383835; --s1: #3987e5; --s2: #d95926; --s3: #199e70; } }.bg { fill: var(--surface); }.grid { stroke: var(--grid); stroke-width: 1; }.axis { stroke: var(--axis); stroke-width: 1; }.rule { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 3 4; }.rule-label { fill: var(--muted); font-size: 10.5px; text-anchor: start; }.tick { fill: var(--muted); font-size: 11px; }.ty { text-anchor: end; } .tx { text-anchor: middle; }.axis-title { fill: var(--muted); font-size: 11.5px; text-anchor: middle; }.line { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }.line.dashed { stroke-dasharray: 5 4; }.dot { stroke: var(--surface); stroke-width: 2; }.direct { font-size: 11.5px; font-weight: 600; }.s1 { stroke: var(--s1); } .s2 { stroke: var(--s2); } .s3 { stroke: var(--s3); }circle.s1 { fill: var(--s1); } circle.s2 { fill: var(--s2); } circle.s3 { fill: var(--s3); }text.s1 { fill: var(--s1); stroke: none; }text.s2 { fill: var(--s2); stroke: none; }text.s3 { fill: var(--s3); stroke: none; }rect.s1 { fill: var(--s1); } rect.s2 { fill: var(--s2); } rect.s3 { fill: var(--s3); }.t { fill: var(--ink); font-size: 15px; font-weight: 620; }.st { fill: var(--ink2); font-size: 11.5px; }.lg { fill: var(--ink2); font-size: 11.5px; }svg { font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; }</style>
+<g class="r"><rect class="bg" x="0" y="0" width="760" height="382" rx="10"/>
+<text class="t" x="26" y="26">Swing-up time</text>
+<text class="st" x="26" y="44">First moment the tilt enters the 15 degree cone and never leaves it again. Blank where the policy never got there a...</text>
+<line class="grid" x1="66" y1="312.0" x2="652" y2="312.0"/>
+<text class="tick ty" x="56" y="316.0">0</text>
+<line class="grid" x1="66" y1="251.0" x2="652" y2="251.0"/>
+<text class="tick ty" x="56" y="255.0">2</text>
+<line class="grid" x1="66" y1="190.0" x2="652" y2="190.0"/>
+<text class="tick ty" x="56" y="194.0">4</text>
+<line class="grid" x1="66" y1="129.0" x2="652" y2="129.0"/>
+<text class="tick ty" x="56" y="133.0">6</text>
+<line class="grid" x1="66" y1="68.0" x2="652" y2="68.0"/>
+<text class="tick ty" x="56" y="72.0">8</text>
+<text class="tick tx" x="66.0" y="334">0</text>
+<text class="tick tx" x="212.5" y="334">500</text>
+<text class="tick tx" x="359.0" y="334">1,000</text>
+<text class="tick tx" x="505.5" y="334">1,500</text>
+<text class="tick tx" x="652.0" y="334">2,000</text>
+<line class="axis" x1="66" y1="312" x2="652" y2="312"/>
+<polyline class="line s1" points="89.4,100.9 95.3,297.4 101.2,297.4 107.0,298.3 112.9,297.1 118.7,300.1 124.6,300.4 130.5,282.1 136.3,300.4 142.2,300.1 148.0,298.6 153.9,300.4 159.8,300.1 165.6,299.5 171.5,298.9 177.3,300.4 183.2,300.1 189.1,300.7 194.9,301.3 200.8,301.3 206.6,301.3 212.5,302.2 218.4,301.6 224.2,302.2 230.1,302.5"/>
+<polyline class="line s1" points="253.5,302.5 259.4,291.3 265.2,291.0 271.1,302.9"/>
+<polyline class="line s1" points="282.8,302.5 288.7,302.5 294.5,301.6 300.4,302.2 306.3,302.5"/>
+<circle class="dot s1" cx="89.4" cy="100.9" r="3.2"/>
+<circle class="dot s1" cx="95.3" cy="297.4" r="3.2"/>
+<circle class="dot s1" cx="101.2" cy="297.4" r="3.2"/>
+<circle class="dot s1" cx="107.0" cy="298.3" r="3.2"/>
+<circle class="dot s1" cx="112.9" cy="297.1" r="3.2"/>
+<circle class="dot s1" cx="118.7" cy="300.1" r="3.2"/>
+<circle class="dot s1" cx="124.6" cy="300.4" r="3.2"/>
+<circle class="dot s1" cx="130.5" cy="282.1" r="3.2"/>
+<circle class="dot s1" cx="136.3" cy="300.4" r="3.2"/>
+<circle class="dot s1" cx="142.2" cy="300.1" r="3.2"/>
+<circle class="dot s1" cx="148.0" cy="298.6" r="3.2"/>
+<circle class="dot s1" cx="153.9" cy="300.4" r="3.2"/>
+<circle class="dot s1" cx="159.8" cy="300.1" r="3.2"/>
+<circle class="dot s1" cx="165.6" cy="299.5" r="3.2"/>
+<circle class="dot s1" cx="171.5" cy="298.9" r="3.2"/>
+<circle class="dot s1" cx="177.3" cy="300.4" r="3.2"/>
+<circle class="dot s1" cx="183.2" cy="300.1" r="3.2"/>
+<circle class="dot s1" cx="189.1" cy="300.7" r="3.2"/>
+<circle class="dot s1" cx="194.9" cy="301.3" r="3.2"/>
+<circle class="dot s1" cx="200.8" cy="301.3" r="3.2"/>
+<circle class="dot s1" cx="206.6" cy="301.3" r="3.2"/>
+<circle class="dot s1" cx="212.5" cy="302.2" r="3.2"/>
+<circle class="dot s1" cx="218.4" cy="301.6" r="3.2"/>
+<circle class="dot s1" cx="224.2" cy="302.2" r="3.2"/>
+<circle class="dot s1" cx="230.1" cy="302.5" r="3.2"/>
+<circle class="dot s1" cx="253.5" cy="302.5" r="3.2"/>
+<circle class="dot s1" cx="259.4" cy="291.3" r="3.2"/>
+<circle class="dot s1" cx="265.2" cy="291.0" r="3.2"/>
+<circle class="dot s1" cx="271.1" cy="302.9" r="3.2"/>
+<circle class="dot s1" cx="282.8" cy="302.5" r="3.2"/>
+<circle class="dot s1" cx="288.7" cy="302.5" r="3.2"/>
+<circle class="dot s1" cx="294.5" cy="301.6" r="3.2"/>
+<circle class="dot s1" cx="300.4" cy="302.2" r="3.2"/>
+<circle class="dot s1" cx="306.3" cy="302.5" r="3.2"/>
+<text class="direct s1" x="314.3" y="306.5">swing-up time</text>
+<text class="axis-title ax-y" x="14" y="190" transform="rotate(-90 14 190)">seconds</text>
+<text class="axis-title ax-x" x="359" y="348">iteration</text>
+</g></svg>

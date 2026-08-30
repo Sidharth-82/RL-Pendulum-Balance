@@ -292,9 +292,15 @@ int main(int argc, char** argv) {
             export_weights(*net, with_iteration(train_config.weights_path, i));
 
             // Save ONLY on a new best. Saving unconditionally means a late collapse
-            // overwrites the policy that worked -- which is exactly what happened on
-            // the first full run: iteration 635 destroyed a policy scoring 3823, and
-            // the next evaluation wrote the wreckage over it. There is no undo.
+            // overwrites the policy that worked, and there is no undo.
+            //
+            // Not hypothetical. The 2026-08-30 run peaked at 3824.9 on iteration 820,
+            // collapsed to 10-step episodes at 840, and never recovered across the
+            // remaining 1160 iterations -- 58% of the run spent dead. Under the old
+            // unconditional save, every one of those 58 evaluations would have written
+            // wreckage over the only policy worth keeping. It also collapsed at 580 and
+            // 720 and recovered both times, so this is a standing mode of the current
+            // entropy_coefficient, not a freak event.
             if (eval_mean_return > best_eval_return) {
                 best_eval_return = eval_mean_return;
                 torch::save(net, train_config.checkpoint_path);
