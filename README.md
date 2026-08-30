@@ -63,19 +63,19 @@ success mode rather than an even spacing:
 
 | Iteration 0 — untrained | Iteration 60 — surviving, not solving |
 |---|---|
-| ![untrained](media/policy-iter0.gif) | ![surviving](media/policy-iter60.gif) |
+| ![untrained](docs/media/policy-iter0.gif) | ![surviving](docs/media/policy-iter60.gif) |
 | **Off the rail at 6.95 s**, peaking at the full **1.00 m**, never upright. Initial actions are near-zero noise by construction — the policy head is initialised with gain 0.01 — so this is a policy pushed off by its own exploration, not one flailing. | Lasts the full 8 s and **still never gets upright**, ending at **32.8°** after wandering to **0.91 m**. It has learned not to die, which is the cheaper half of the reward, and nothing else. |
 
 | Iteration 120 — solved | Iteration 820 — best |
 |---|---|
-| ![solved](media/policy-iter120.gif) | ![best](media/policy-iter820.gif) |
+| ![solved](docs/media/policy-iter120.gif) | ![best](docs/media/policy-iter820.gif) |
 | First evaluation past 90% of ceiling. Upright at **0.49 s**, ends at **2.4e-5°**, peaks at **0.41 m**. | The best of the run. Upright at **0.31 s**, ends at **0.017°**, peaks at **0.34 m** of a ±1.0 m rail — a third of the time and a fifth of the rail that iteration 0 needed to fall over. |
 
 ### After the collapse
 
 | Iteration 860 — collapsed, and does not look it | Iteration 1000 — collapsed, and looks it |
 |---|---|
-| ![collapsed but balancing](media/policy-iter860.gif) | ![collapsed](media/policy-iter1000.gif) |
+| ![collapsed but balancing](docs/media/policy-iter860.gif) | ![collapsed](docs/media/policy-iter1000.gif) |
 | Twenty evaluations after the best result in the run this policy is **dead in training** — 10-step episodes scoring −145. Here it swings up at **0.47 s** and holds to **0.067°**. | 140 iterations further into the dead zone, the damage is visible in MuJoCo too: **off the rail at 1.06 s**, never upright, ending at **103°** after running the full **1.00 m**. |
 
 Both are the same collapse. The difference is only whether the failure mode happens to be one
@@ -106,7 +106,7 @@ independent there; it caught four planted errors. It is silent on the envelope, 
 sim-to-real actually lives, and iteration 860 is the proof that the silence has teeth.
 
 Full-quality video of the best policy:
-[`docs/media/policy-final.mp4`](media/policy-final.mp4).
+[`docs/media/policy-final.mp4`](docs/media/policy-final.mp4).
 
 Regenerate all of it — the clips, and the caption numbers measured off the clips rather than
 off the training log:
