@@ -41,7 +41,7 @@ with a log behind it.
 | Held at ceiling | 30 of 100 evaluations, iterations 120 → 820 |
 | Cost | 2,000 iterations, 8.2 M policy steps, CPU only |
 
-**→ Full training report: [Markdown](training-report.md) · [interactive HTML](training-report.html)** —
+**→ Full training report: [Markdown](docs/training-report.md) · [interactive HTML](docs/training-report.html)** —
 16 charts covering learning curves, PPO diagnostics, trajectories, the phase portrait, and
 per-evaluation derived metrics, with every evaluation in a table underneath. Both are
 generated from the run directory by `tools/training_report.py`; neither is written by hand.
